@@ -1,0 +1,6 @@
+@emdz.dgii.recaudo.WebAPI_HostAddress = http://localhost:5266
+
+GET {{emdz.dgii.recaudo.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

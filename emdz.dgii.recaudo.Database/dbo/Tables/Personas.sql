@@ -6,6 +6,7 @@
     [SegundoNombre]   NVARCHAR (50) NULL,
     [PrimerApellido]  NVARCHAR (50) NOT NULL,
     [SegundoApellido] NVARCHAR (50) NULL,
+    [FechaNacimiento] DATE          NOT NULL,
     [Estado]          BIT           NOT NULL,
     CONSTRAINT [PK_Personas] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Personas_TiposDocumentos] FOREIGN KEY ([IdTipoDocumento]) REFERENCES [dbo].[TiposDocumentos] ([Id]),

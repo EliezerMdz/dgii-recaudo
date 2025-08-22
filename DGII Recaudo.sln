@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "emdz.dgii.recaudo.Domain", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "emdz.dgii.recaudo.Infrastructure", "emdz.dgii.recaudo.Infrastructure\emdz.dgii.recaudo.Infrastructure.csproj", "{E8CB7317-8DDA-4D04-98E0-498A41E40C48}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "emdz.dgii.recaudo.Application", "emdz.dgii.recaudo.Application\emdz.dgii.recaudo.Application.csproj", "{EE91C33D-769F-4C05-B787-F6A179EF8B06}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{E8CB7317-8DDA-4D04-98E0-498A41E40C48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8CB7317-8DDA-4D04-98E0-498A41E40C48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8CB7317-8DDA-4D04-98E0-498A41E40C48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE91C33D-769F-4C05-B787-F6A179EF8B06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE91C33D-769F-4C05-B787-F6A179EF8B06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE91C33D-769F-4C05-B787-F6A179EF8B06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE91C33D-769F-4C05-B787-F6A179EF8B06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

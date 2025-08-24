@@ -25,19 +25,19 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
 
         using var multi = await connection.QueryMultipleAsync("[ObtenerComprobantesFiscales]", new
         {
-            taxpayerTypeId = request.TaxpayerId,
-            pageNumber = request.PageNumber,
-            limit= request.Limit
+            request.TaxpayerId,
+            request.PageNumber,
+            request.Limit
         }, 
         commandType: CommandType.StoredProcedure);
 
-        var receipts = await multi.ReadAsync<TaxReceipt>();
+        var taxReceipts = await multi.ReadAsync<TaxReceipt>();
 
         var pagination = await multi.ReadFirstOrDefaultAsync<Pagination>();
 
         return new TaxReceiptResponse
         {
-            TaxReceipts = receipts,
+            TaxReceipts = taxReceipts,
             Pagination = pagination ?? new Pagination()
         };
     }
@@ -48,9 +48,27 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
     /// <param name="request"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public Task<TaxReceiptResponse> GetTaxpayers(TaxpayerRequest request)
+    public async Task<TaxpayerResponse> GetTaxpayers(TaxpayerRequest request)
     {
-        throw new NotImplementedException();
+        using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
+
+        using var multi = await connection.QueryMultipleAsync("[ObtenerContribuyentes]", new
+        {
+            request.@TaxpayerTypeId,
+            request.PageNumber,
+            request.Limit
+        },
+        commandType: CommandType.StoredProcedure);
+
+        var taxpayers = await multi.ReadAsync<Taxpayer>();
+
+        var pagination = await multi.ReadFirstOrDefaultAsync<Pagination>();
+
+        return new TaxpayerResponse
+        {
+            Taxpayers = taxpayers,
+            Pagination = pagination ?? new Pagination()
+        };
     }
 
     public Task<DocumentType> GetDocumentTypeByIdAsync(int id)

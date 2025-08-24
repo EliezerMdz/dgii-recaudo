@@ -8,7 +8,7 @@ public interface IDgiiService
 {
     public Task<TaxReceiptResponse> GetTaxReceipts(TaxReceiptRequest request);
 
-    public Task<TaxReceiptResponse> GetTaxpayers(TaxpayerRequest request);
+    public Task<TaxpayerResponse> GetTaxpayers(TaxpayerRequest request);
 
     public Task<DocumentType> GetDocumentTypeByIdAsync(int id);
 

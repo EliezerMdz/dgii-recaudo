@@ -7,5 +7,5 @@ public interface IDgiiApplication
 {
     public Task<TaxReceiptResponse> GetTaxReceipts(TaxReceiptRequest request);
 
-    public Task<TaxReceiptResponse> GetTaxpayers(TaxpayerRequest request);
+    public Task<TaxpayerResponse> GetTaxpayers(TaxpayerRequest request);
 }

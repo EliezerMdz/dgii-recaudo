@@ -71,7 +71,7 @@ BEGIN
 	OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY;
 
 	-- Cuando se busca por mas de 1 registro
-	IF @Id IS NULL
+	IF @Id IS NULL AND @DocumentNumber IS NULL
 	BEGIN
 		-- Dataset[1] con los datos de la paginacion
 		SELECT	@PageNumber   AS PageNumber,

@@ -10,14 +10,13 @@ public interface IDgiiRepository
 
     public Task<TaxPayerResponse> GetTaxPayersAsync(TaxPayerRequest request);
     
+    public Task<TaxPayer> GetTaxPayerByIdAsync(int id);
+    
     public Task<TaxPayerType> GetTaxPayerTypeByIdAsync(int id);
 
     public Task<DocumentType> GetDocumentTypeByIdAsync(int id);
 
-    public Task<LegalEntity> GetLegalEntityByIdAsync(int id);
+    public Task<NaturalPerson> GetNaturalPersonByDocumentAsync(int documentTypeId, string documentNumber);
 
-    public Task<NaturalPerson> GetNaturalPersonByIdAsync(int id);
-
-    public Task<TaxPayer> GetTaxPayerByIdAsync(int id);
-
+    public Task<LegalEntity> GetLegalEntityByRncAsync(string documentNumber);
 }

@@ -18,7 +18,6 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public async Task<TaxReceiptResponse> GetTaxReceiptsAsync(TaxReceiptRequest request)
     {
         using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
@@ -47,7 +46,6 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public async Task<TaxPayerResponse> GetTaxPayersAsync(TaxPayerRequest request)
     {
         using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
@@ -74,7 +72,7 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="request"></param>
     /// <returns></returns>
     public async Task<TaxPayer> GetTaxPayerByIdAsync(int id)
     {
@@ -89,6 +87,11 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
         return response;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     public async Task<TaxPayerType> GetTaxPayerTypeByIdAsync(int id)
     {
         using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
@@ -102,6 +105,11 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
         return response;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     public async Task<DocumentType> GetDocumentTypeByIdAsync(int id)
     {
         using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
@@ -115,13 +123,40 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
         return response;
     }
 
-    public Task<LegalEntity> GetLegalEntityByIdAsync(int id)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    public async Task<NaturalPerson> GetNaturalPersonByDocumentAsync(int documentTypeId, string documentNumber)
     {
-        throw new NotImplementedException();
+        using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
+
+        var response = await connection.QuerySingleAsync<NaturalPerson>("[ObtenerPersonas]", new
+        {
+            DocumentTypeId = documentTypeId,
+            DocumentNumber = documentNumber
+        },
+        commandType: CommandType.StoredProcedure);
+
+        return response;
     }
 
-    public Task<NaturalPerson> GetNaturalPersonByIdAsync(int id)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    public async Task<LegalEntity> GetLegalEntityByRncAsync(string documentNumber)
     {
-        throw new NotImplementedException();
+        using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
+
+        var response = await connection.QuerySingleAsync<LegalEntity>("[ObtenerEntidades]", new
+        {
+            Rnc = documentNumber
+        },
+        commandType: CommandType.StoredProcedure);
+
+        return response;
     }
 }

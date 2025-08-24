@@ -35,7 +35,7 @@ public class DgiiController(IDgiiApplication application, IMapper mapper) : Cont
     {
         try
         {
-            var response = await application.GetTaxReceipts(new TaxReceiptRequest 
+            var response = await application.GetTaxReceiptsAsync(new TaxReceiptRequest 
             {
                 TaxPayerId = taxPayerId,
                 StartDate = startDate,
@@ -73,14 +73,20 @@ public class DgiiController(IDgiiApplication application, IMapper mapper) : Cont
     {
         try
         {
-            var response = await application.GetTaxPayers(new TaxPayerRequest
+            var response = await application.GetTaxPayersAsync(new TaxPayerRequest
             {
                 TaxPayerTypeId = taxPayerTypeId,
                 PageNumber = pageNumber,
                 Limit = limit
             });
 
-            return Ok(response);
+
+            // Return OK with no content if there are no tax receipts
+            if (response.TaxPayers?.Count() == 0) return Ok();
+
+            var responseDto = mapper.Map<TaxPayerResponse, TaxPayerResponseDto>(response);
+
+            return Ok(responseDto);
         }
         catch (Exception ex)
         {

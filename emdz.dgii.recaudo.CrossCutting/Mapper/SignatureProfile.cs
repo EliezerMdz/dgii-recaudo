@@ -11,5 +11,9 @@ public class SignatureProfile : Profile
         CreateMap<TaxReceiptResponse, TaxReceiptResponseDto>()
             .ForMember(dest => dest.TaxReceiptsDto, opt => opt.MapFrom(source => source.TaxReceipts))
             .ForMember(dest => dest.Pagination, opt => opt.MapFrom(source => source.Pagination));
+
+        CreateMap<TaxPayerResponse, TaxPayerResponseDto>()
+            .ForMember(dest => dest.TaxPayersDto, opt => opt.MapFrom(source => source.TaxPayers))
+            .ForMember(dest => dest.Pagination, opt => opt.MapFrom(source => source.Pagination));
     }
 }

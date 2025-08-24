@@ -84,12 +84,21 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<EntityProfile>();
 });
 
-// Resolvers for AutoMapper
+// Resolving in AutoMapper profile [taxPayerId] to [TaxPayerDto]
 builder.Services.AddTransient<TaxPayerResolver>();
 
+// Resolving in AutoMapper profile [taxPayerTypeId] to [TaxPayerTypeDto]
 builder.Services.AddTransient<TaxPayerTypeResolver>();
 
-builder.Services.AddTransient<DocumentTypeResolver>();
+// Resolving in AutoMapper profile [DocumentTypeId] to [DocumentTypeDto]
+builder.Services.AddTransient<DocumentTypeForTaxPayerResolver>();
+builder.Services.AddTransient<DocumentTypeForNaturalPersonResolver>();
+
+// Resolving in AutoMapper profile [NaturalPersonDto] when TaxPayerType.Code == "PER"
+builder.Services.AddTransient<NaturalPersonResolver>();
+
+// Resolving in AutoMapper profile [LegalEntityDto]  when TaxPayerType.Code == "EMP"
+builder.Services.AddTransient<LegalEntityResolver>();
 
 var app = builder.Build();
 

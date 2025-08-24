@@ -5,7 +5,7 @@ namespace emdz.dgii.recaudo.Domain.Interfaces.Application;
 
 public interface IDgiiApplication
 {
-    public Task<TaxReceiptResponse> GetTaxReceipts(TaxReceiptRequest request);
+    public Task<TaxReceiptResponse> GetTaxReceiptsAsync(TaxReceiptRequest request);
 
-    public Task<TaxPayerResponse> GetTaxPayers(TaxPayerRequest request);
+    public Task<TaxPayerResponse> GetTaxPayersAsync(TaxPayerRequest request);
 }

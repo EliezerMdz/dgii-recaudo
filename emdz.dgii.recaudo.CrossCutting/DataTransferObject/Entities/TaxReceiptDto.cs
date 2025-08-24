@@ -1,10 +1,13 @@
-﻿namespace emdz.dgii.recaudo.CrossCutting.DataTransferObject.Entities;
+﻿using Newtonsoft.Json;
+
+namespace emdz.dgii.recaudo.CrossCutting.DataTransferObject.Entities;
 
 public class TaxReceiptDto
 {
     public int Id { get; set; }
 
-    public required TaxPayerDto TaxPayer { get; set; }
+    [JsonProperty("taxPayer")]
+    public required TaxPayerDto TaxPayerDto { get; set; }
 
     public required string Ncf { get; set; }
 

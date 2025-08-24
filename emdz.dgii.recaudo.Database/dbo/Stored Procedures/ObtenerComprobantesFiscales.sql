@@ -2,7 +2,7 @@
 CREATE PROCEDURE [dbo].[ObtenerComprobantesFiscales]
 (
 	@Id				INT = NULL,
-    @TaxpayerTypeId INT = NULL,
+    @TaxPayerId		INT = NULL,
     @PageNumber     INT = NULL,
     @Limit          INT = NULL
 )
@@ -42,7 +42,7 @@ BEGIN
 		  ,[Fecha]
 	FROM [dbo].[ComprobantesFiscales]
 	WHERE (@Id IS NULL OR @Id = [Id]) 
-	AND (@TaxpayerTypeId IS NULL OR @TaxpayerTypeId = [IdContribuyente]);
+	AND (@TaxPayerId IS NULL OR @TaxPayerId = [IdContribuyente]);
 
 	-- Calculando el total de registros y paginas
 	SET @TotalRecords	= (SELECT COUNT(*) FROM #FilteredResults);

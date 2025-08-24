@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[ObtenerContribuyentes] 
 (
 	@Id				INT = NULL,
-    @TaxpayerTypeId INT = NULL,
+    @TaxPayerTypeId INT = NULL,
 	@DocumentTypeId	INT = NULL,
     @PageNumber     INT = NULL,
     @Limit          INT = NULL
@@ -40,7 +40,7 @@ BEGIN
            [Estado]
     FROM [dbo].[Contribuyentes]
 	WHERE (@Id IS NULL OR @Id = [Id]) 
-	AND (@TaxpayerTypeId IS NULL OR [IdTipoContribuyente] = @TaxpayerTypeId)
+	AND (@TaxPayerTypeId IS NULL OR [IdTipoContribuyente] = @TaxPayerTypeId)
 	AND (@DocumentTypeId IS NULL OR [IdTipoDocumento] = @DocumentTypeId);
 
     -- Calculando el total de registros y páginas

@@ -1,8 +1,9 @@
 ﻿CREATE PROCEDURE [dbo].[ObtenerEntidades] 
 (
-	@Id				INT = NULL,
-    @PageNumber     INT = NULL,
-    @Limit          INT = NULL
+	@Id				INT				= NULL,
+	@Rnc			NVARCHAR(25)	= NULL,
+    @PageNumber     INT				= NULL,
+    @Limit          INT				= NULL
 )
 AS
 BEGIN
@@ -36,7 +37,8 @@ BEGIN
 		[Nombre],
 		[Estado]
 	FROM [dbo].[Entidades]
-	WHERE (@Id IS NULL OR @Id = [Id]);
+	WHERE (@Id IS NULL OR @Id = [Id])
+	AND (@Rnc IS NULL OR @Rnc = [Rnc]);
 
 	-- Calculando el total de registros y paginas
 	SET @TotalRecords	= (SELECT COUNT(*) FROM #FilteredResults);
@@ -52,7 +54,7 @@ BEGIN
 	OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY;
 
 	-- Cuando se busca por mas de 1 registro
-	IF @Id IS NULL
+	IF @Id IS NULL AND @Rnc IS NULL
 	BEGIN
 		-- Dataset[1] con los datos de la paginacion
 		SELECT	@PageNumber   AS PageNumber,

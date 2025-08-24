@@ -8,17 +8,17 @@ namespace emdz.dgii.recaudo.Domain.Service;
 
 public class DgiiService(IDgiiRepository repository) : IDgiiService
 {
-    public async Task<TaxReceiptResponse> GetTaxReceipts(TaxReceiptRequest request) => await repository.GetTaxReceiptsAsync(request);
+    public async Task<TaxReceiptResponse> GetTaxReceiptsAsync(TaxReceiptRequest request) => await repository.GetTaxReceiptsAsync(request);
 
-    public async Task<TaxPayerResponse> GetTaxPayers(TaxPayerRequest request) => await repository.GetTaxPayersAsync(request);
+    public async Task<TaxPayerResponse> GetTaxPayersAsync(TaxPayerRequest request) => await repository.GetTaxPayersAsync(request);
 
-    public async Task<TaxPayer> GetTaxPayerById(int id) => await repository.GetTaxPayerByIdAsync(id);
+    public async Task<TaxPayer> GetTaxPayerByIdAsync(int id) => await repository.GetTaxPayerByIdAsync(id);
 
-    public async Task<TaxPayerType> GetTaxPayerTypeById(int id) => await repository.GetTaxPayerTypeByIdAsync(id);
+    public async Task<TaxPayerType> GetTaxPayerTypeByIdAsync(int id) => await repository.GetTaxPayerTypeByIdAsync(id);
 
     public async Task<DocumentType> GetDocumentTypeByIdAsync(int id) => await repository.GetDocumentTypeByIdAsync(id);    
 
-    public async Task<LegalEntity> GetLegalEntityByIdAsync(int id) => await repository.GetLegalEntityByIdAsync(id);
+    public async Task<NaturalPerson> GetNaturalPersonByDocumentAsync(int documentTypeId, string documentNumber)  => await repository.GetNaturalPersonByDocumentAsync(documentTypeId, documentNumber);
 
-    public async Task<NaturalPerson> GetNaturalPersonById(int id) => await repository.GetNaturalPersonByIdAsync(id);
+    public async Task<LegalEntity> GetLegalEntityByRncAsync(string documentNumber) => await repository.GetLegalEntityByRncAsync(documentNumber);
 }

@@ -1,8 +1,6 @@
-﻿
-CREATE PROCEDURE [dbo].[ObtenerComprobantesFiscales]
+﻿CREATE PROCEDURE [dbo].[ObtenerEntidades] 
 (
 	@Id				INT = NULL,
-    @TaxpayerTypeId INT = NULL,
     @PageNumber     INT = NULL,
     @Limit          INT = NULL
 )
@@ -21,40 +19,34 @@ BEGIN
 	-- Calculando el offset de la paginacion
 	DECLARE @Offset	int	= (@PageNumber - 1) * @Limit;
 
-	-- Definiendo tabla temporal
+	-- Definiendo tabla temporal 
 	CREATE TABLE #FilteredResults
 	(
-		[Id]				int,
-		[IdContribuyente]	int,
-		[NCF]				nvarchar(50),
-		[Monto]				money,
-		[ITBIS]				money,
-		[Fecha]				datetime
+		[Id]     INT,
+		[Rnc]    NVARCHAR(25),
+		[Nombre] NVARCHAR(100),
+		[Estado] BIT
 	);
 
-	-- Insertando en la temporal acorde a los parametros
+	-- Insertando en la temporal acorde a los parametros 
 	INSERT INTO #FilteredResults
-	SELECT [Id]
-		  ,[IdContribuyente]
-		  ,[NCF]
-		  ,[Monto]
-		  ,[ITBIS]
-		  ,[Fecha]
-	FROM [dbo].[ComprobantesFiscales]
-	WHERE (@Id IS NULL OR @Id = [Id]) 
-	AND (@TaxpayerTypeId IS NULL OR @TaxpayerTypeId = [IdContribuyente]);
+	SELECT
+		[Id],
+		[Rnc],
+		[Nombre],
+		[Estado]
+	FROM [dbo].[Entidades]
+	WHERE (@Id IS NULL OR @Id = [Id]);
 
 	-- Calculando el total de registros y paginas
 	SET @TotalRecords	= (SELECT COUNT(*) FROM #FilteredResults);
 	SET @TotalPages		= CEILING(CAST(@TotalRecords AS float) / @Limit);
 
 	-- Dataset[0] con los datos del modelo
-	SELECT [Id]
-		  ,[IdContribuyente]	AS [TaxpayerId]
-		  ,[NCF]				AS [Ncf]
-		  ,[Monto]				AS [Amount]
-		  ,[ITBIS]				AS [ITBIS]
-		  ,[Fecha]				AS [GeneratedAt]
+	SELECT  [Id],
+			[Rnc],
+			[Nombre]	AS [Name],
+			[Estado]	AS [IsActive]
 	FROM #FilteredResults
 	ORDER BY [Id]
 	OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY;

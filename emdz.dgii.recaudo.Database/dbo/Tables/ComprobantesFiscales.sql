@@ -3,7 +3,7 @@
     [IdContribuyente] INT           NOT NULL,
     [NCF]             NVARCHAR (50) NOT NULL,
     [Monto]           MONEY         NOT NULL,
-    [ITBIS]           BIT           NOT NULL,
+    [ITBIS]           MONEY         NOT NULL,
     [Fecha]           DATETIME      NOT NULL,
     CONSTRAINT [PK_ComprobantesFiscales] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_ComprobantesFiscales_Contribuyentes] FOREIGN KEY ([IdContribuyente]) REFERENCES [dbo].[Contribuyentes] ([Id]),

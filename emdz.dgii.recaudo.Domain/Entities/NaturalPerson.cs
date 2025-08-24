@@ -4,6 +4,10 @@ public class NaturalPerson
 {
     public required int Id { get; set; }
 
+    public required int DocumentTypeId { get; set; }
+
+    public required string DocumentNumber { get; set; }
+
     public required string FirstName { get; set; }
 
     public required string MiddleName { get; set; }

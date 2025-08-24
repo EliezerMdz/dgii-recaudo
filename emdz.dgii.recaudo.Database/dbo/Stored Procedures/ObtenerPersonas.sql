@@ -1,10 +1,10 @@
-﻿
-CREATE PROCEDURE [dbo].[ObtenerComprobantesFiscales]
+﻿CREATE PROCEDURE [dbo].[ObtenerPersonas] 
 (
-	@Id				INT = NULL,
-    @TaxpayerTypeId INT = NULL,
-    @PageNumber     INT = NULL,
-    @Limit          INT = NULL
+	@Id					INT				= NULL,
+    @DocumentTypeId		INT				= NULL,
+	@DocumentNumber		NVARCHAR(25)	= NULL,
+    @PageNumber			INT				= NULL,
+    @Limit				INT				= NULL
 )
 AS
 BEGIN
@@ -24,37 +24,48 @@ BEGIN
 	-- Definiendo tabla temporal
 	CREATE TABLE #FilteredResults
 	(
-		[Id]				int,
-		[IdContribuyente]	int,
-		[NCF]				nvarchar(50),
-		[Monto]				money,
-		[ITBIS]				money,
-		[Fecha]				datetime
+		[Id]              INT,
+		[IdTipoDocumento] INT,
+		[NumeroDocumento] NVARCHAR(25),
+		[PrimerNombre]    NVARCHAR(50),
+		[SegundoNombre]   NVARCHAR(50) NULL,
+		[PrimerApellido]  NVARCHAR(50),
+		[SegundoApellido] NVARCHAR(50) NULL,
+		[FechaNacimiento] DATE,
+		[Estado]          BIT
 	);
 
 	-- Insertando en la temporal acorde a los parametros
 	INSERT INTO #FilteredResults
-	SELECT [Id]
-		  ,[IdContribuyente]
-		  ,[NCF]
-		  ,[Monto]
-		  ,[ITBIS]
-		  ,[Fecha]
-	FROM [dbo].[ComprobantesFiscales]
-	WHERE (@Id IS NULL OR @Id = [Id]) 
-	AND (@TaxpayerTypeId IS NULL OR @TaxpayerTypeId = [IdContribuyente]);
+	SELECT
+		[Id],
+		[IdTipoDocumento],
+		[NumeroDocumento],
+		[PrimerNombre],
+		[SegundoNombre],
+		[PrimerApellido],
+		[SegundoApellido],
+		[FechaNacimiento],
+		[Estado]
+	FROM [dbo].[Personas]
+	WHERE(@Id IS NULL OR @Id = [Id])
+	AND (@DocumentTypeId IS NULL OR @DocumentTypeId = [IdTipoDocumento])
+	AND (@DocumentNumber IS NULL OR @DocumentNumber = [NumeroDocumento]);
 
 	-- Calculando el total de registros y paginas
 	SET @TotalRecords	= (SELECT COUNT(*) FROM #FilteredResults);
 	SET @TotalPages		= CEILING(CAST(@TotalRecords AS float) / @Limit);
 
 	-- Dataset[0] con los datos del modelo
-	SELECT [Id]
-		  ,[IdContribuyente]	AS [TaxpayerId]
-		  ,[NCF]				AS [Ncf]
-		  ,[Monto]				AS [Amount]
-		  ,[ITBIS]				AS [ITBIS]
-		  ,[Fecha]				AS [GeneratedAt]
+	SELECT  [Id],
+			[IdTipoDocumento]	AS DocumentTypeId,
+			[NumeroDocumento]	AS DocumentNumber,
+			[PrimerNombre]		AS FirstName,
+			[SegundoNombre]		AS MiddleName,
+			[PrimerApellido]	AS FirstLastName,
+			[SegundoApellido]	AS SecondLastName,
+			[FechaNacimiento]	AS Birthday,
+			[Estado]			AS IsActive
 	FROM #FilteredResults
 	ORDER BY [Id]
 	OFFSET @Offset ROWS FETCH NEXT @Limit ROWS ONLY;

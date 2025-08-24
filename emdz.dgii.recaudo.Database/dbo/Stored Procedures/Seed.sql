@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [InicializadorModelos]
+﻿CREATE PROCEDURE [Seed]
 AS
 BEGIN TRANSACTION;
 

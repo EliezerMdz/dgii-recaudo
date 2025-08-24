@@ -1,4 +1,5 @@
 using emdz.dgii.recaudo.Application;
+using emdz.dgii.recaudo.CrossCutting.Mapper;
 using emdz.dgii.recaudo.Domain.Interfaces.Application;
 using emdz.dgii.recaudo.Domain.Interfaces.Repository;
 using emdz.dgii.recaudo.Domain.Interfaces.Service;
@@ -11,8 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers()
-    .AddNewtonsoftJson(options =>
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     // Ignorar propiedades con valor null
     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
@@ -24,9 +24,10 @@ builder.Services.AddControllers()
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddSwaggerGen(c =>
+// Swagger configuration with OpenAPI info and XML comments
+builder.Services.AddSwaggerGen(config =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo
+    config.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "DGII Recaudo API",
         Version = "v1",
@@ -37,14 +38,14 @@ builder.Services.AddSwaggerGen(c =>
     // XML comments
     var xml = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xml);
-    if (File.Exists(xmlPath)) c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
+    if (File.Exists(xmlPath)) config.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
 
     // Show enums as strings
-    c.DescribeAllParametersInCamelCase();
-    c.CustomSchemaIds(t => t.FullName); // avoids name clashes on generics
+    config.DescribeAllParametersInCamelCase();
+    config.CustomSchemaIds(t => t.FullName); // avoids name clashes on generics
 
     // Bearer/JWT support (optional)
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    config.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme. Example: 'Bearer {token}'",
         Name = "Authorization",
@@ -54,7 +55,7 @@ builder.Services.AddSwaggerGen(c =>
         BearerFormat = "JWT"
     });
 
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    config.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } },
@@ -74,6 +75,21 @@ builder.Services.AddScoped<IDgiiService, DgiiService>();
 // Dependency Injection for repositories
 
 builder.Services.AddScoped<IDgiiRepository, DgiiRepository>();
+
+// AutoMapper configuration
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddProfile<SignatureProfile>();
+
+    config.AddProfile<EntityProfile>();
+});
+
+// Resolvers for AutoMapper
+builder.Services.AddTransient<TaxPayerResolver>();
+
+builder.Services.AddTransient<TaxPayerTypeResolver>();
+
+builder.Services.AddTransient<DocumentTypeResolver>();
 
 var app = builder.Build();
 

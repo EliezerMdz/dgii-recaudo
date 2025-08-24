@@ -1,10 +1,10 @@
-﻿namespace emdz.dgii.recaudo.Domain.Entities;
+﻿namespace emdz.dgii.recaudo.CrossCutting.DataTransferObject.Entities;
 
-public class TaxReceipt
+public class TaxReceiptDto
 {
     public int Id { get; set; }
 
-    public required int TaxPayerId { get; set; }
+    public required TaxPayerDto TaxPayer { get; set; }
 
     public required string Ncf { get; set; }
 

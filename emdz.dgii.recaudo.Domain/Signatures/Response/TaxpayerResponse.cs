@@ -4,10 +4,10 @@ using Newtonsoft.Json;
 
 namespace emdz.dgii.recaudo.Domain.Signatures.Response;
 
-public class TaxpayerResponse
+public class TaxPayerResponse
 {
     [JsonProperty("data")]
-    public IEnumerable<Taxpayer>? Taxpayers { get; set; } = [];
+    public IEnumerable<TaxPayer>? TaxPayers { get; set; } = [];
 
     [JsonProperty("pagination")]
     public required Pagination Pagination { get; set; }

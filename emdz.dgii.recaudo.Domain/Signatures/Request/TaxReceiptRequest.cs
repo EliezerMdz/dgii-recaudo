@@ -2,7 +2,7 @@
 
 public class TaxReceiptRequest
 {
-    public int? TaxpayerId { get; set; }
+    public int? TaxPayerId { get; set; }
 
     public DateTime? StartDate { get; set; }
 

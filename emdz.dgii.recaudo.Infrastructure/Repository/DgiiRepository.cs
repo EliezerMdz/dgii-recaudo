@@ -19,13 +19,13 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
     /// <param name="request"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public async Task<TaxReceiptResponse> GetTaxReceipts(TaxReceiptRequest request)
+    public async Task<TaxReceiptResponse> GetTaxReceiptsAsync(TaxReceiptRequest request)
     {
         using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
 
         using var multi = await connection.QueryMultipleAsync("[ObtenerComprobantesFiscales]", new
         {
-            request.TaxpayerId,
+            request.TaxPayerId,
             request.PageNumber,
             request.Limit
         }, 
@@ -48,32 +48,71 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
     /// <param name="request"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public async Task<TaxpayerResponse> GetTaxpayers(TaxpayerRequest request)
+    public async Task<TaxPayerResponse> GetTaxPayersAsync(TaxPayerRequest request)
     {
         using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
 
         using var multi = await connection.QueryMultipleAsync("[ObtenerContribuyentes]", new
         {
-            request.@TaxpayerTypeId,
+            request.@TaxPayerTypeId,
             request.PageNumber,
             request.Limit
         },
         commandType: CommandType.StoredProcedure);
 
-        var taxpayers = await multi.ReadAsync<Taxpayer>();
+        var taxPayers = await multi.ReadAsync<TaxPayer>();
 
         var pagination = await multi.ReadFirstOrDefaultAsync<Pagination>();
 
-        return new TaxpayerResponse
+        return new TaxPayerResponse
         {
-            Taxpayers = taxpayers,
+            TaxPayers = taxPayers,
             Pagination = pagination ?? new Pagination()
         };
     }
 
-    public Task<DocumentType> GetDocumentTypeByIdAsync(int id)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public async Task<TaxPayer> GetTaxPayerByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
+
+        var response = await connection.QuerySingleAsync<TaxPayer>("[ObtenerContribuyentes]", new
+        {
+            Id = id
+        },
+        commandType: CommandType.StoredProcedure);
+
+        return response;
+    }
+
+    public async Task<TaxPayerType> GetTaxPayerTypeByIdAsync(int id)
+    {
+        using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
+
+        var response = await connection.QuerySingleAsync<TaxPayerType>("[ObtenerTiposContribuyentes]", new
+        {
+            Id = id
+        },
+        commandType: CommandType.StoredProcedure);
+
+        return response;
+    }
+
+    public async Task<DocumentType> GetDocumentTypeByIdAsync(int id)
+    {
+        using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
+
+        var response = await connection.QuerySingleAsync<DocumentType>("[ObtenerTiposDocumentos]", new
+        {
+            Id = id
+        },
+        commandType: CommandType.StoredProcedure);
+
+        return response;
     }
 
     public Task<LegalEntity> GetLegalEntityByIdAsync(int id)
@@ -81,17 +120,7 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
         throw new NotImplementedException();
     }
 
-    public Task<NaturalPerson> GetNaturalPersonById(int id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Taxpayer> GetTaxpayerById(int id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<TaxpayerType> GetTaxpayerTypeById(int id)
+    public Task<NaturalPerson> GetNaturalPersonByIdAsync(int id)
     {
         throw new NotImplementedException();
     }

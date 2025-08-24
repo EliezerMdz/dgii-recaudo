@@ -1,8 +1,8 @@
 ﻿namespace emdz.dgii.recaudo.Domain.Signatures.Request;
 
-public class TaxpayerRequest
+public class TaxPayerRequest
 {
-    public int? TaxpayerTypeId { get; set; }
+    public int? TaxPayerTypeId { get; set; }
 
     public int? PageNumber { get; set; }
 

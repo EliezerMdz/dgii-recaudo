@@ -6,17 +6,18 @@ namespace emdz.dgii.recaudo.Domain.Interfaces.Repository;
 
 public interface IDgiiRepository
 {
-    public Task<TaxReceiptResponse> GetTaxReceipts(TaxReceiptRequest request);
+    public Task<TaxReceiptResponse> GetTaxReceiptsAsync(TaxReceiptRequest request);
 
-    public Task<TaxpayerResponse> GetTaxpayers(TaxpayerRequest request);
+    public Task<TaxPayerResponse> GetTaxPayersAsync(TaxPayerRequest request);
+    
+    public Task<TaxPayerType> GetTaxPayerTypeByIdAsync(int id);
 
     public Task<DocumentType> GetDocumentTypeByIdAsync(int id);
 
     public Task<LegalEntity> GetLegalEntityByIdAsync(int id);
 
-    public Task<NaturalPerson> GetNaturalPersonById(int id);
+    public Task<NaturalPerson> GetNaturalPersonByIdAsync(int id);
 
-    public Task<Taxpayer> GetTaxpayerById(int id);
+    public Task<TaxPayer> GetTaxPayerByIdAsync(int id);
 
-    public Task<TaxpayerType> GetTaxpayerTypeById(int id);
 }

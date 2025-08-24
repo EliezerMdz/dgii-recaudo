@@ -1,10 +1,10 @@
 ﻿namespace emdz.dgii.recaudo.Domain.Entities;
 
-public class Taxpayer
+public class TaxPayer
 {
     public required int Id { get; set; }
 
-    public required int TaxpayerTypeId { get; set; }
+    public required int TaxPayerTypeId { get; set; }
 
     public required int DocumentTypeId { get; set; }
 

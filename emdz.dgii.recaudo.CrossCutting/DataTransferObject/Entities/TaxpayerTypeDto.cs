@@ -1,6 +1,6 @@
-﻿namespace emdz.dgii.recaudo.Domain.Entities;
+﻿namespace emdz.dgii.recaudo.CrossCutting.DataTransferObject.Entities;
 
-public class TaxPayerType
+public class TaxPayerTypeDto
 {
     public required int Id { get; set; }
 

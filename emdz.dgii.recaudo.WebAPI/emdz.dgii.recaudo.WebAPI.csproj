@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\emdz.dgii.recaudo.Application\emdz.dgii.recaudo.Application.csproj" />
+    <ProjectReference Include="..\emdz.dgii.recaudo.CrossCutting\emdz.dgii.recaudo.CrossCutting.csproj" />
     <ProjectReference Include="..\emdz.dgii.recaudo.Infrastructure\emdz.dgii.recaudo.Infrastructure.csproj" />
   </ItemGroup>
 

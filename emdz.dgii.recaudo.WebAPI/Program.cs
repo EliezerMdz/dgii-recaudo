@@ -85,7 +85,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(opt =>
     {
         opt.SwaggerEndpoint("/swagger/v1/swagger.json", "DGII Recaudo API v1");
-        opt.RoutePrefix = "api"; // Swagger UI at root: https://localhost:5001/
     });
 }
 

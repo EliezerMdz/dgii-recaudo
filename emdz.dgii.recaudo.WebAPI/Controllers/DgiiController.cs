@@ -16,7 +16,7 @@ namespace emdz.dgii.recaudo.WebAPI.Controllers;
 /// <param name="application"></param>
 [ApiController]
 [Route("api/dgii")]
-public class DgiiController(IDgiiApplication application, IMapper mapper) : Controller
+public class DgiiController(IDgiiApplication application, IMapper mapper) : BaseController
 {
     /// <summary>
     /// Retrieves a paginated list of tax receipts based on the specified filters.
@@ -53,7 +53,7 @@ public class DgiiController(IDgiiApplication application, IMapper mapper) : Cont
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex.Message);
+            return CustomException(ex);
         }
     }
 
@@ -90,7 +90,7 @@ public class DgiiController(IDgiiApplication application, IMapper mapper) : Cont
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex.Message);
+            return CustomException(ex);
         }
     }
 }

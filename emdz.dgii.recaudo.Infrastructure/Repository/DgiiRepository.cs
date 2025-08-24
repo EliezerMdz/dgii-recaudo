@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using emdz.dgii.recaudo.Domain.Entities;
+using emdz.dgii.recaudo.Domain.Excepciones;
 using emdz.dgii.recaudo.Domain.Interfaces.Repository;
 using emdz.dgii.recaudo.Domain.Signatures.Request;
 using emdz.dgii.recaudo.Domain.Signatures.Response;
@@ -112,15 +113,22 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
     /// <returns></returns>
     public async Task<DocumentType> GetDocumentTypeByIdAsync(int id)
     {
-        using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
-
-        var response = await connection.QuerySingleAsync<DocumentType>("[ObtenerTiposDocumentos]", new
+        try
         {
-            Id = id
-        },
-        commandType: CommandType.StoredProcedure);
+            using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
 
-        return response;
+            var response = await connection.QuerySingleAsync<DocumentType>("[ObtenerTiposDocumentos2]", new
+            {
+                Id = id
+            },
+            commandType: CommandType.StoredProcedure);
+
+            return response;
+        }
+        catch
+        {
+            throw new DocumentTypeException("infrastructure.repository.documentType", $"Could not retrieve document type with ID {id} from the database");
+        }
     }
 
     /// <summary>

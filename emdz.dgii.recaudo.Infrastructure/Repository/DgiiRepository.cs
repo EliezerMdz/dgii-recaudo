@@ -21,25 +21,32 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
     /// <returns></returns>
     public async Task<TaxReceiptResponse> GetTaxReceiptsAsync(TaxReceiptRequest request)
     {
-        using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
+        try 
+        { 
+            using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
 
-        using var multi = await connection.QueryMultipleAsync("[ObtenerComprobantesFiscales]", new
+            using var multi = await connection.QueryMultipleAsync("[ObtenerComprobantesFiscales]", new
+            {
+                request.TaxPayerId,
+                request.PageNumber,
+                request.Limit
+            }, 
+            commandType: CommandType.StoredProcedure);
+
+            var taxReceipts = await multi.ReadAsync<TaxReceipt>();
+
+            var pagination = await multi.ReadFirstOrDefaultAsync<Pagination>();
+
+            return new TaxReceiptResponse
+            {
+                TaxReceipts = taxReceipts,
+                Pagination = pagination ?? new Pagination()
+            };
+        }
+        catch
         {
-            request.TaxPayerId,
-            request.PageNumber,
-            request.Limit
-        }, 
-        commandType: CommandType.StoredProcedure);
-
-        var taxReceipts = await multi.ReadAsync<TaxReceipt>();
-
-        var pagination = await multi.ReadFirstOrDefaultAsync<Pagination>();
-
-        return new TaxReceiptResponse
-        {
-            TaxReceipts = taxReceipts,
-            Pagination = pagination ?? new Pagination()
-        };
+            throw new TaxPayerTypeException("infrastructure.repository.TaxReceiptResponse", $"Could not retrieve tax receipt response from the database");
+        }
     }
 
     /// <summary>
@@ -49,25 +56,32 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
     /// <returns></returns>
     public async Task<TaxPayerResponse> GetTaxPayersAsync(TaxPayerRequest request)
     {
-        using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
+        try 
+        { 
+            using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
 
-        using var multi = await connection.QueryMultipleAsync("[ObtenerContribuyentes]", new
+            using var multi = await connection.QueryMultipleAsync("[ObtenerContribuyentes]", new
+            {
+                request.@TaxPayerTypeId,
+                request.PageNumber,
+                request.Limit
+            },
+            commandType: CommandType.StoredProcedure);
+
+            var taxPayers = await multi.ReadAsync<TaxPayer>();
+
+            var pagination = await multi.ReadFirstOrDefaultAsync<Pagination>();
+
+            return new TaxPayerResponse
+            {
+                TaxPayers = taxPayers,
+                Pagination = pagination ?? new Pagination()
+            };
+        }
+        catch
         {
-            request.@TaxPayerTypeId,
-            request.PageNumber,
-            request.Limit
-        },
-        commandType: CommandType.StoredProcedure);
-
-        var taxPayers = await multi.ReadAsync<TaxPayer>();
-
-        var pagination = await multi.ReadFirstOrDefaultAsync<Pagination>();
-
-        return new TaxPayerResponse
-        {
-            TaxPayers = taxPayers,
-            Pagination = pagination ?? new Pagination()
-        };
+            throw new TaxPayerTypeException("infrastructure.repository.TaxPayerResponse", $"Could not retrieve tax payer response from the database");
+        }
     }
 
     /// <summary>
@@ -77,15 +91,22 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
     /// <returns></returns>
     public async Task<TaxPayer> GetTaxPayerByIdAsync(int id)
     {
-        using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
-
-        var response = await connection.QuerySingleAsync<TaxPayer>("[ObtenerContribuyentes]", new
+        try
         {
-            Id = id
-        },
-        commandType: CommandType.StoredProcedure);
+            using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
 
-        return response;
+            var response = await connection.QuerySingleAsync<TaxPayer>("[ObtenerContribuyentes]", new
+            {
+                Id = id
+            },
+            commandType: CommandType.StoredProcedure);
+
+            return response;
+        }
+        catch
+        {
+            throw new TaxPayerTypeException("infrastructure.repository.TaxPayer", $"Could not retrieve tax payer with ID {id} from the database");
+        }
     }
 
     /// <summary>
@@ -95,15 +116,22 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
     /// <returns></returns>
     public async Task<TaxPayerType> GetTaxPayerTypeByIdAsync(int id)
     {
-        using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
+        try 
+        { 
+            using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
 
-        var response = await connection.QuerySingleAsync<TaxPayerType>("[ObtenerTiposContribuyentes]", new
+            var response = await connection.QuerySingleAsync<TaxPayerType>("[ObtenerTiposContribuyentes]", new
+            {
+                Id = id
+            },
+            commandType: CommandType.StoredProcedure);
+
+            return response;
+        }
+        catch
         {
-            Id = id
-        },
-        commandType: CommandType.StoredProcedure);
-
-        return response;
+            throw new TaxPayerTypeException("infrastructure.repository.TaxPayerType", $"Could not retrieve tax payer type with ID {id} from the database");
+        }
     }
 
     /// <summary>
@@ -117,7 +145,7 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
         {
             using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
 
-            var response = await connection.QuerySingleAsync<DocumentType>("[ObtenerTiposDocumentos2]", new
+            var response = await connection.QuerySingleAsync<DocumentType>("[ObtenerTiposDocumentos]", new
             {
                 Id = id
             },
@@ -127,7 +155,7 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
         }
         catch
         {
-            throw new DocumentTypeException("infrastructure.repository.documentType", $"Could not retrieve document type with ID {id} from the database");
+            throw new DocumentTypeException("infrastructure.repository.DocumentType", $"Could not retrieve document type with ID {id} from the database");
         }
     }
 
@@ -138,16 +166,23 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
     /// <returns></returns>
     public async Task<NaturalPerson> GetNaturalPersonByDocumentAsync(int documentTypeId, string documentNumber)
     {
-        using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
-
-        var response = await connection.QuerySingleAsync<NaturalPerson>("[ObtenerPersonas]", new
+        try
         {
-            DocumentTypeId = documentTypeId,
-            DocumentNumber = documentNumber
-        },
-        commandType: CommandType.StoredProcedure);
+            using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
 
-        return response;
+            var response = await connection.QuerySingleAsync<NaturalPerson>("[ObtenerPersonas]", new
+            {
+                DocumentTypeId = documentTypeId,
+                DocumentNumber = documentNumber
+            },
+            commandType: CommandType.StoredProcedure);
+
+            return response;
+        }
+        catch
+        {
+            throw new NaturalPersonException("infrastructure.repository.NaturalPerson", $"Could not retrieve natural person with documento type {documentTypeId} and documentNumber {documentNumber} from the database");
+        }   
     }
 
     /// <summary>
@@ -157,14 +192,21 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
     /// <returns></returns>
     public async Task<LegalEntity> GetLegalEntityByRncAsync(string documentNumber)
     {
-        using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
-
-        var response = await connection.QuerySingleAsync<LegalEntity>("[ObtenerEntidades]", new
+        try
         {
-            Rnc = documentNumber
-        },
-        commandType: CommandType.StoredProcedure);
+            using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
 
-        return response;
+            var response = await connection.QuerySingleAsync<LegalEntity>("[ObtenerEntidades]", new
+            {
+                Rnc = documentNumber
+            },
+            commandType: CommandType.StoredProcedure);
+
+            return response;
+        }
+        catch
+        {
+            throw new LegalEntityException("infrastructure.repository.LegalEntity", $"Could not retrieve legal entity with documento number {documentNumber} from the database");
+        }   
     }
 }

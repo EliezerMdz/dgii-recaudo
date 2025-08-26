@@ -70,11 +70,11 @@
     <Build Include="dbo\Tables\Personas.sql" />
     <Build Include="dbo\Tables\ComprobantesFiscales.sql" />
     <Build Include="dbo\Stored Procedures\Seed.sql" />
-    <Build Include="dbo\Stored Procedures\ObtenerComprobantesFiscales.sql" />
     <Build Include="dbo\Stored Procedures\ObtenerContribuyentes.sql" />
     <Build Include="dbo\Stored Procedures\ObtenerEntidades.sql" />
     <Build Include="dbo\Stored Procedures\ObtenerPersonas.sql" />
     <Build Include="dbo\Stored Procedures\ObtenerTiposContribuyentes.sql" />
     <Build Include="dbo\Stored Procedures\ObtenerTiposDocumentos.sql" />
+    <Build Include="dbo\Stored Procedures\ObtenerResumenComprobantesFiscales.sql" />
   </ItemGroup>
 </Project>

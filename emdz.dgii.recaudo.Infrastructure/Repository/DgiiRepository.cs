@@ -45,7 +45,32 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
         }
         catch
         {
-            throw new TaxPayerTypeException("infrastructure.repository.TaxReceiptResponse", $"Could not retrieve tax receipt response from the database");
+            throw new TaxReceiptException("infrastructure.repository.TaxReceiptResponse", $"Could not retrieve tax receipts for tax payer with ID {request.TaxPayerId} response from the database");
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    public async Task<TaxReceiptSummaryResponse> GetTaxReceiptsSummaryAsync(TaxReceiptSummaryRequest request)
+    {
+        try
+        {
+            using var connection = new SqlConnection(configuration.GetConnectionString(Constants.DgiiRecaudoConnectionString));
+
+            var response = await connection.QuerySingleAsync<TaxReceiptSummaryResponse>("[ObtenerResumenComprobantesFiscales]", new
+            {
+                request.TaxPayerId
+            },
+            commandType: CommandType.StoredProcedure);
+
+            return response;
+        }
+        catch
+        {
+            throw new TaxReceiptException("infrastructure.repository.TaxReceiptResponse", $"Could not retrieve tax receipts summary for tax payer with ID {request.TaxPayerId} response from the database");
         }
     }
 
@@ -80,7 +105,7 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
         }
         catch
         {
-            throw new TaxPayerTypeException("infrastructure.repository.TaxPayerResponse", $"Could not retrieve tax payer response from the database");
+            throw new TaxPayerException("infrastructure.repository.TaxPayerResponse", $"Could not retrieve tax payers response from the database");
         }
     }
 
@@ -105,7 +130,7 @@ public class DgiiRepository(IConfiguration configuration) : IDgiiRepository
         }
         catch
         {
-            throw new TaxPayerTypeException("infrastructure.repository.TaxPayer", $"Could not retrieve tax payer with ID {id} from the database");
+            throw new TaxPayerException("infrastructure.repository.TaxPayer", $"Could not retrieve tax payer with ID {id} from the database");
         }
     }
 

@@ -2,6 +2,8 @@
 .vs/
 .idea/
 .vscode/
+*.dbmdl
+*.jfm
 
 # Build results
 bin/

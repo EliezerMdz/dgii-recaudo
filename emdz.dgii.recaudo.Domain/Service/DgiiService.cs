@@ -10,6 +10,8 @@ public class DgiiService(IDgiiRepository repository) : IDgiiService
 {
     public async Task<TaxReceiptResponse> GetTaxReceiptsAsync(TaxReceiptRequest request) => await repository.GetTaxReceiptsAsync(request);
 
+    public async Task<TaxReceiptSummaryResponse> GetTaxReceiptsSummaryAsync(TaxReceiptSummaryRequest request) => await repository.GetTaxReceiptsSummaryAsync(request);
+
     public async Task<TaxPayerResponse> GetTaxPayersAsync(TaxPayerRequest request) => await repository.GetTaxPayersAsync(request);
 
     public async Task<TaxPayer> GetTaxPayerByIdAsync(int id) => await repository.GetTaxPayerByIdAsync(id);

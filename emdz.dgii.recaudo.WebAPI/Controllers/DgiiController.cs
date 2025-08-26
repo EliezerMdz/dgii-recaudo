@@ -58,6 +58,36 @@ public class DgiiController(IDgiiApplication application, IMapper mapper) : Base
     }
 
     /// <summary>
+    /// Retrieves a summary of tax receipts for the specified taxpayer.
+    /// </summary>
+    /// <remarks>This method handles exceptions internally and returns appropriate HTTP responses  for
+    /// unexpected errors.</remarks>
+    /// <param name="taxPayerId">The unique identifier of the taxpayer for whom the tax receipts summary is requested.  If <see
+    /// langword="null"/>, the summary will be retrieved for all taxpayers.</param>
+    /// <returns>An <see cref="IActionResult"/> containing the tax receipts summary.  Returns an HTTP 200 status code with no
+    /// content if no summary is available.</returns>
+    [HttpGet("taxreceipts/summary")]
+    public async Task<IActionResult> GetTaxReceiptsSummary(int? taxPayerId)
+    {
+        try
+        {
+            var response = await application.GetTaxReceiptsSummaryAsync(new TaxReceiptSummaryRequest
+            {
+                TaxPayerId = taxPayerId
+            });
+
+            // Return OK with no content if there are no tax receipts summary
+            if (response is null) return Ok();
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return CustomException(ex);
+        }
+    }
+
+    /// <summary>
     /// Retrieves a paginated list of taxPayers based on the specified criteria.
     /// </summary>
     /// <remarks>This method supports filtering by taxPayer type and pagination to manage large datasets. 

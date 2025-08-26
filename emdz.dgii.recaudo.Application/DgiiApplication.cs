@@ -9,5 +9,7 @@ public class DgiiApplication(IDgiiService service) : IDgiiApplication
 {
     public async Task<TaxReceiptResponse> GetTaxReceiptsAsync(TaxReceiptRequest request) => await service.GetTaxReceiptsAsync(request);
 
+    public async Task<TaxReceiptSummaryResponse> GetTaxReceiptsSummaryAsync(TaxReceiptSummaryRequest request) => await service.GetTaxReceiptsSummaryAsync(request);
+
     public async Task<TaxPayerResponse> GetTaxPayersAsync(TaxPayerRequest request) => await service.GetTaxPayersAsync(request);
 }

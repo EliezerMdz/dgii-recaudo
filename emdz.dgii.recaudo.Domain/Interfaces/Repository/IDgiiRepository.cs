@@ -8,6 +8,8 @@ public interface IDgiiRepository
 {
     public Task<TaxReceiptResponse> GetTaxReceiptsAsync(TaxReceiptRequest request);
 
+    public Task<TaxReceiptSummaryResponse> GetTaxReceiptsSummaryAsync(TaxReceiptSummaryRequest request);
+
     public Task<TaxPayerResponse> GetTaxPayersAsync(TaxPayerRequest request);
     
     public Task<TaxPayer> GetTaxPayerByIdAsync(int id);
